@@ -37,6 +37,7 @@ public class CourierLoginTest {
     @Description("Проверяется авторизации с валидными данными")
     public void successLoginCourierTest(){
         ValidatableResponse loginResponse = courierStep.login(CourierCredentials.from(courier));
+        courierId = loginResponse.extract().path("id");
         loginResponse
                 .statusCode(200)
                 .assertThat()
@@ -47,6 +48,7 @@ public class CourierLoginTest {
     @DisplayName("Авторизации без логина")
     @Description("Проверяется невозможность авторизации курьера без логина")
     public void loginCourierWithoutLoginTest(){
+        courierId = courierStep.login(CourierCredentials.from(courier)).extract().path("id");
         ValidatableResponse loginResponse = courierStep.login(CourierCredentials.from(courier.setLogin("")));
         loginResponse
                 .statusCode(400)
@@ -60,6 +62,7 @@ public class CourierLoginTest {
     @DisplayName("Авторизации без пароля")
     @Description("Проверяется невозможность авторизации курьера без пароля")
     public void loginCourierWithoutPasswordTest(){
+        courierId = courierStep.login(CourierCredentials.from(courier)).extract().path("id");
         ValidatableResponse loginResponse = courierStep.login(CourierCredentials.from(courier.setPassword("")));
         loginResponse
                 .statusCode(400)
@@ -73,6 +76,7 @@ public class CourierLoginTest {
     @DisplayName("Авторизация курьера c некорректным логином")
     @Description("Проверяется невозможность авторизации курьера c некорректным логином")
     public void loginWithIncorrectLoginTest() {
+        courierId = courierStep.login(CourierCredentials.from(courier)).extract().path("id");
         ValidatableResponse loginResponse = courierStep.login(CourierCredentials.from(courier.setLogin("UNKNOWN_LOGIN")));
         loginResponse
                 .statusCode(404)
@@ -86,6 +90,7 @@ public class CourierLoginTest {
     @DisplayName("Авторизация курьера c некорректным паролем")
     @Description("Проверяется невозможность авторизации курьера c некорректным паролем")
     public void loginWithIncorrectPasswordTest() {
+        courierId = courierStep.login(CourierCredentials.from(courier)).extract().path("id");
         ValidatableResponse loginResponse = courierStep.login(CourierCredentials.from(courier.setPassword("UNKNOWN_PASSWORD")));
         loginResponse
                 .statusCode(404)
@@ -99,6 +104,7 @@ public class CourierLoginTest {
     @DisplayName("Авторизация несуществующего курьера")
     @Description("Проверяется невозможность авторизации курьера с несуществующей парой логин+пароль")
     public void loginUnknownCourierTest() {
+        courierId = courierStep.login(CourierCredentials.from(courier)).extract().path("id");
         ValidatableResponse loginResponse = courierStep.login(CourierCredentials.from(notExistCourier));
         loginResponse
                 .statusCode(404)
